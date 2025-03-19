@@ -27,14 +27,17 @@ opportunity-hack-grant-finder/
 │   ├── opportunity_hack_grant_finder.py # Main implementation
 │   └── utils/                          # Utility modules
 │       ├── __init__.py
+│       ├── analyzer.py                 # Grant opportunity analysis
+│       ├── crawler.py                  # Advanced web crawler implementation
 │       ├── email_utils.py              # Email notification utilities
+│       ├── grant_writer.py             # Claude-powered grant application writer
 │       ├── parsing.py                  # HTML parsing utilities
 │       └── reporting.py                # Report generation utilities
 │
 ├── data/                               # Data directory
-│   ├── raw/                            # Raw crawler output
-│   ├── processed/                      # Processed grant data
-│   └── reports/                        # Generated reports
+│   ├── opportunity_hack/               # Opportunity Hack specific data
+│   │   └── auto_grants/                # Auto-generated grant applications
+│   └── cache/                          # Cached web pages
 │
 ├── logs/                               # Log files
 │
