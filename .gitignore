@@ -1,0 +1,4 @@
+src/data/cache
+src/data/opportunity_hack/*
+src/logs/*.log
+.env
