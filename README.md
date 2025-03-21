@@ -61,6 +61,7 @@ opportunity-hack-grant-finder/
 
 ## Installation
 
+### MacOS/Linux
 1. Clone the repository
 ```bash
 git clone https://github.com/opportunity-hack/grant-finder.git
@@ -81,6 +82,35 @@ pip install -r requirements.txt
 4. Create required directories
 ```bash
 mkdir -p data/raw data/processed data/reports logs
+```
+
+5. Set up environment variables
+```bash
+cp .env.example .env
+# Edit .env with your settings
+```
+
+### Windows
+1. Clone the repository
+```bash
+git clone https://github.com/opportunity-hack/grant-finder.git
+cd opportunity-hack-grant-finder
+```
+
+2. Create a virtual environment (tested with Python 3.9)
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+4. Create required directories
+```bash
+mkdir "data/raw" "data/processed" "data/reports" "logs"
 ```
 
 5. Set up environment variables
