@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "architecture",
+  "quality": "showcase",
+  "startedAt": "2026-10-17T05:56:20.494Z",
+  "specification": {
+    "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/candidate.json",
+    "sha256": "991d5b461e1d4c81d32be72406da6243fd4e7274fd33020840981047ded0596b",
+    "bytes": 5420
+  },
+  "artifact": {
+    "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html"
+  },
+  "stages": {
+    "validate": {
+      "status": "not-run",
+      "execution": "embedded-in-deliver"
+    },
+    "deliver": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": 202,
+      "command": [
+        "/usr/bin/node",
+        "/home/hatch/workspace/custom-skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/candidate.json",
+        "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/home/hatch/workspace/grant-crawler-v2work",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "deliver",
+        "receiptId": "c9a2d7a0-c831-4bb3-9f4f-832ac08c47d2",
+        "stage": "prepare",
+        "type": "architecture",
+        "input": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/candidate.json",
+        "output": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html",
+        "error": "Could not persist the delivery attempt before rendering: Could not prepare the delivery journal \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.delivery-pending.json\" safely (delivery-journal-candidate-changed-during-inspection).",
+        "diagnostics": [
+          {
+            "code": "delivery/journal-recovery-required",
+            "severity": "error",
+            "message": "Delivery journal publication could not be rolled back safely. Recovery material was retained at \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56\".",
+            "subject": {
+              "output": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html",
+              "journal": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.delivery-pending.json"
+            },
+            "evidence": {
+              "reason": "Could not prepare the delivery journal \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.delivery-pending.json\" safely (delivery-journal-candidate-changed-during-inspection).",
+              "recoveryRequired": true,
+              "recoveryDirectory": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56",
+              "recoveryFiles": [
+                {
+                  "label": "preserved staged journal entry",
+                  "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56/grant-finder-v2.delivery-pending.json"
+                }
+              ],
+              "rollbackErrors": [
+                "the staged journal candidate was replaced before cleanup"
+              ]
+            },
+            "supportedFixes": [
+              "leave the delivery lock and current journal claimant untouched",
+              "inspect every recovery file in \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56\" and restore the previous journal only after the claimant is resolved"
+            ]
+          }
+        ],
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      }
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "delivery/journal-recovery-required",
+      "severity": "error",
+      "message": "Delivery journal publication could not be rolled back safely. Recovery material was retained at \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56\".",
+      "subject": {
+        "output": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html",
+        "journal": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.delivery-pending.json"
+      },
+      "evidence": {
+        "reason": "Could not prepare the delivery journal \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.delivery-pending.json\" safely (delivery-journal-candidate-changed-during-inspection).",
+        "recoveryRequired": true,
+        "recoveryDirectory": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56",
+        "recoveryFiles": [
+          {
+            "label": "preserved staged journal entry",
+            "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56/grant-finder-v2.delivery-pending.json"
+          }
+        ],
+        "rollbackErrors": [
+          "the staged journal candidate was replaced before cleanup"
+        ]
+      },
+      "supportedFixes": [
+        "leave the delivery lock and current journal claimant untouched",
+        "inspect every recovery file in \"/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/.archify-provenance-wRNE56\" and restore the previous journal only after the claimant is resolved"
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.finalize.json",
+    "summaryReceipt": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "deliver",
+  "finishedAt": "2026-10-17T05:56:20.814Z",
+  "durationMs": 320,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-17T05:08:39.687Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

@@ -2,6 +2,73 @@
 
 A specialized web crawler designed to find grant opportunities relevant to Opportunity Hack's mission of technology for social good.
 
+## V2 pipeline (October 2026) - the current system
+
+The original crawler below scraped web pages and extracted amounts,
+deadlines, and eligibility with regular expressions. Its output fed
+ohack.dev/nonprofit-grants, and by 2026 the page was visibly wrong:
+news articles listed as grants, a $110M program shown as "110 USD",
+deadlines from 2022-2025, and eligibility text copied from site
+navigation. A baseline run on 2026-10-16 found zero grants in 7
+minutes (its seed sites are largely dead) and left an unclosed,
+invalid JSON file behind.
+
+V2 replaces discovery and extraction with structured sources whose
+fields can be trusted:
+
+- **Grants.gov API** (`src/v2/sources/grantsgov.py`): open federal
+  opportunities for 501(c)(3) and other nonprofits. Agency, close date,
+  eligibility, and assistance listings come from the API; award amounts
+  are filled from the details endpoint when it is available and left
+  empty when it is not. Amounts are never inferred from text.
+- **ProPublica Nonprofit Explorer API** (`src/v2/sources/propublica.py`):
+  Arizona grantmaking foundations from IRS Form 990 filings, with EIN,
+  latest filing year, and total assets. This is the "990 data" half of
+  the finder: nonprofits can open a foundation's filing record and see
+  who actually received grants.
+- **Curated programs** (`src/v2/sources/curated.py`): a short
+  hand-verified list of recurring tech-for-nonprofit programs (Google
+  Ad Grants, AWS Imagine Grant, Okta for Good, Twilio.org, TechSoup),
+  each with an honest status (open, rolling, invitation-only, or annual
+  cycle closed) and the date a human last verified it.
+
+A validation gate (`src/v2/validate.py`) runs before anything is
+written: deadlines must parse and be in the future, implausible amounts
+are nulled (never guessed, and they never drop the record), text is
+entity-decoded, and records are deduped by source id. Every record
+carries `source_api`, `source_id`, and `verified_at` provenance.
+
+Run it:
+
+```bash
+pip install -r requirements-v2.txt
+python -m src.v2.pipeline --output-dir data/output
+pytest tests/test_v2.py -q
+```
+
+Outputs (the contract ohack.dev/nonprofit-grants consumes):
+
+- `data/output/opportunity_hack_grants.json` - grant records for the page cards
+- `data/output/report_data.json` - summary stats plus the Arizona funders list
+
+A GitHub Action (`.github/workflows/refresh-grants.yml`) re-runs the
+pipeline weekly and opens a pull request with the refreshed data for
+human review. The architecture diagram lives at
+`docs/diagrams/grant-finder-v2.html`.
+
+### Legacy crawler (deprecated)
+
+Everything under `src/utils/`, `src/config.py`, `main.py`, and
+`src/opportunity_hack_grant_finder.py` is the original 2024-2025
+regex-scraping crawler. It is kept for reference only. Known defects
+(documented in the October 2026 review): amounts extracted by regex
+with no million/billion handling, deadlines stored as unparsed strings
+and never compared to today, a crawl loop that cannot terminate
+normally, incremental saves that duplicate and corrupt output, SSL
+verification disabled, and an auto-grant-writing feature that sends
+applications drafts built from a placeholder organization profile.
+Do not point the website at its output.
+
 ## Features
 
 - Crawls targeted grant provider websites, foundation pages, and tech-for-good sources

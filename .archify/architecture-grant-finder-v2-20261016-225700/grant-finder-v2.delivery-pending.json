@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "command": "deliver",
+  "status": "pending",
+  "receiptId": "eadd8b3e-00f2-436a-9893-c1b8c353d7aa",
+  "input": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/candidate.json",
+  "output": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html"
+}
