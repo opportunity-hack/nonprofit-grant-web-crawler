@@ -1,0 +1,4 @@
+# Grant Finder v2 dependencies (the pipeline only; the legacy crawler
+# keeps its own requirements.txt)
+requests>=2.28.0
+pydantic>=2.0.0

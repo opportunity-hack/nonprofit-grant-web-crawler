@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Grant Finder v2: structured-source pipeline",
+    "output": ".archify/architecture-grant-finder-v2-20261016-225700/grant-finder-v2.html",
+    "quality_profile": "showcase",
+    "locale": "en",
+    "repository": {
+      "origin": "https://github.com/opportunity-hack/nonprofit-grant-web-crawler",
+      "commit": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+    }
+  },
+  "components": [
+    {
+      "id": "grantsgov",
+      "type": "cloud",
+      "label": "Grants.gov API",
+      "sublabel": "federal opportunities",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/v2/sources/grantsgov.py"
+        }
+      ]
+    },
+    {
+      "id": "propublica",
+      "type": "cloud",
+      "label": "ProPublica Nonprofit Explorer",
+      "sublabel": "IRS Form 990 data",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/v2/sources/propublica.py"
+        }
+      ]
+    },
+    {
+      "id": "curated",
+      "type": "cloud",
+      "label": "Curated programs",
+      "sublabel": "hand-verified list",
+      "pos": [
+        40,
+        340
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/v2/sources/curated.py"
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "type": "backend",
+      "label": "GitHub Action",
+      "sublabel": "weekly refresh PR",
+      "pos": [
+        330,
+        60
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": ".github/workflows/refresh-grants.yml"
+        }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "type": "backend",
+      "label": "v2 pipeline",
+      "sublabel": "src/v2/pipeline.py",
+      "pos": [
+        330,
+        200
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/v2/pipeline.py"
+        }
+      ]
+    },
+    {
+      "id": "validate",
+      "type": "security",
+      "label": "Validation gate",
+      "sublabel": "dates \u00b7 amounts \u00b7 dedupe",
+      "pos": [
+        570,
+        200
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/v2/validate.py"
+        }
+      ]
+    },
+    {
+      "id": "outputs",
+      "type": "database",
+      "label": "Page data files",
+      "sublabel": "grants + report JSON",
+      "pos": [
+        810,
+        200
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "page",
+      "type": "external",
+      "label": "ohack.dev/nonprofit-grants",
+      "sublabel": "frontend repo page",
+      "pos": [
+        810,
+        60
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "legacy",
+      "type": "backend",
+      "label": "Legacy regex crawler",
+      "sublabel": "deprecated",
+      "pos": [
+        570,
+        340
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "tag": "2024-2025"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "nonprofit-grant-web-crawler repo",
+      "wraps": [
+        "action",
+        "pipeline",
+        "validate",
+        "outputs",
+        "legacy"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "gg-to-pipeline",
+      "from": "grantsgov",
+      "to": "pipeline",
+      "label": "structured search hits",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pp-to-pipeline",
+      "from": "propublica",
+      "to": "pipeline",
+      "label": "AZ foundation filings"
+    },
+    {
+      "id": "cur-to-pipeline",
+      "from": "curated",
+      "to": "pipeline",
+      "label": "5 verified programs"
+    },
+    {
+      "id": "action-to-pipeline",
+      "from": "action",
+      "to": "pipeline",
+      "label": "runs Mondays",
+      "variant": "dashed"
+    },
+    {
+      "id": "pipeline-to-validate",
+      "from": "pipeline",
+      "to": "validate",
+      "label": "raw records"
+    },
+    {
+      "id": "validate-to-outputs",
+      "from": "validate",
+      "to": "outputs",
+      "label": "kept records + drop log",
+      "variant": "emphasis"
+    },
+    {
+      "id": "outputs-to-page",
+      "from": "outputs",
+      "to": "page",
+      "label": "copied into frontend repo",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "legacy-to-outputs",
+      "from": "legacy",
+      "to": "outputs",
+      "label": "old snapshot replaced",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Why v2",
+      "items": [
+        "Amounts and deadlines come only from structured API fields, never regex over page text",
+        "Every record carries its source and retrieval date"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Validation gate",
+      "items": [
+        "Deadlines must parse and be in the future at build time",
+        "Implausible amounts are nulled, never guessed; records are deduped by source id"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Freshness",
+      "items": [
+        "Weekly GitHub Action regenerates the data and opens a PR for human review",
+        "The legacy crawler produced the stale March 2025 snapshot and is deprecated"
+      ]
+    }
+  ]
+}

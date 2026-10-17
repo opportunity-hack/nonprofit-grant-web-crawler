@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "architecture",
+  "quality": "showcase",
+  "startedAt": "2026-10-17T05:56:29.167Z",
+  "specification": {
+    "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/candidate.json",
+    "sha256": "5df8f53961e0856f716e0392790752783285e90d27e5d20cc97471ecd55a9d35",
+    "bytes": 5419
+  },
+  "artifact": {
+    "path": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/grant-finder-v2.html"
+  },
+  "stages": {
+    "validate": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": null,
+      "command": [
+        "/usr/bin/node",
+        "/home/hatch/workspace/custom-skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/candidate.json",
+        "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/grant-finder-v2.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/home/hatch/workspace/grant-crawler-v2work",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "deliver",
+        "receiptId": "6869e919-5e30-4025-a5b1-26c7c1502007",
+        "stage": "render",
+        "type": "architecture",
+        "input": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/candidate.json",
+        "output": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/grant-finder-v2.html",
+        "error": "/components/0/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+        "diagnostics": [
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/0/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/0/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "grantsgov",
+              "componentId": "grantsgov"
+            },
+            "evidence": {
+              "sourcePath": "src/v2/sources/grantsgov.py",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          },
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/1/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/1/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "propublica",
+              "componentId": "propublica"
+            },
+            "evidence": {
+              "sourcePath": "src/v2/sources/propublica.py",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          },
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/2/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/2/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "curated",
+              "componentId": "curated"
+            },
+            "evidence": {
+              "sourcePath": "src/v2/sources/curated.py",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          },
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/3/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/3/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "action",
+              "componentId": "action"
+            },
+            "evidence": {
+              "sourcePath": ".github/workflows/refresh-grants.yml",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          },
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/4/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/4/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "pipeline",
+              "componentId": "pipeline"
+            },
+            "evidence": {
+              "sourcePath": "src/v2/pipeline.py",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          },
+          {
+            "code": "repository-evidence/file-missing",
+            "severity": "error",
+            "message": "/components/5/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+            "subject": {
+              "surface": "repository-evidence",
+              "path": "/components/5/sources/0/path",
+              "diagramType": "architecture",
+              "collection": "components",
+              "nodeId": "validate",
+              "componentId": "validate"
+            },
+            "evidence": {
+              "sourcePath": "src/v2/validate.py",
+              "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+            },
+            "supportedFixes": [
+              "use a file path that exists at the pinned revision"
+            ]
+          }
+        ],
+        "provenance": "absent",
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      },
+      "execution": "embedded-in-deliver"
+    },
+    "deliver": {
+      "status": "not-run",
+      "execution": "blocked-by-validate"
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/0/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/0/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "grantsgov",
+        "componentId": "grantsgov"
+      },
+      "evidence": {
+        "sourcePath": "src/v2/sources/grantsgov.py",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    },
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/1/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/1/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "propublica",
+        "componentId": "propublica"
+      },
+      "evidence": {
+        "sourcePath": "src/v2/sources/propublica.py",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    },
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/2/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/2/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "curated",
+        "componentId": "curated"
+      },
+      "evidence": {
+        "sourcePath": "src/v2/sources/curated.py",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    },
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/3/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/3/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "action",
+        "componentId": "action"
+      },
+      "evidence": {
+        "sourcePath": ".github/workflows/refresh-grants.yml",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    },
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/4/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/4/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "pipeline",
+        "componentId": "pipeline"
+      },
+      "evidence": {
+        "sourcePath": "src/v2/pipeline.py",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    },
+    {
+      "code": "repository-evidence/file-missing",
+      "severity": "error",
+      "message": "/components/5/sources/0/path does not identify a file at revision 145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7.",
+      "subject": {
+        "surface": "repository-evidence",
+        "path": "/components/5/sources/0/path",
+        "diagramType": "architecture",
+        "collection": "components",
+        "nodeId": "validate",
+        "componentId": "validate"
+      },
+      "evidence": {
+        "sourcePath": "src/v2/validate.py",
+        "revision": "145a2e11ecad5ff87b1b3c217a4bb163cd4e12b7"
+      },
+      "supportedFixes": [
+        "use a file path that exists at the pinned revision"
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/grant-finder-v2.finalize.json",
+    "summaryReceipt": "/home/hatch/workspace/grant-crawler-v2work/.archify/architecture-grant-finder-v2-20261016-231100/grant-finder-v2.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "validate",
+  "finishedAt": "2026-10-17T05:56:29.812Z",
+  "durationMs": 644,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-17T05:08:39.687Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}
