@@ -1,0 +1,44 @@
+name: Refresh grants data (v2)
+
+# Regenerates data/output from the structured sources and opens a PR
+# when the data changed. A human merges; the /nonprofit-grants page on
+# ohack.dev is updated from these files (see README, "V2 pipeline").
+
+on:
+  schedule:
+    - cron: "0 14 * * 1" # Mondays 14:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install v2 dependencies
+        run: pip install -r requirements-v2.txt
+      - name: Run tests
+        run: |
+          pip install pytest
+          pytest tests/test_v2.py -q
+      - name: Run pipeline
+        run: python -m src.v2.pipeline --output-dir data/output
+      - name: Open pull request with refreshed data
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: data-refresh/grants
+          title: "Weekly grants data refresh (v2 pipeline)"
+          commit-message: "Refresh grants data from Grants.gov + ProPublica"
+          body: |
+            Automated refresh from the Grant Finder v2 pipeline.
+            Sources: Grants.gov API, ProPublica Nonprofit Explorer (IRS 990 data),
+            plus the hand-verified curated list (statuses re-check before merging
+            if the curated entries are older than 90 days).
+          add-paths: |
+            data/output/*.json
