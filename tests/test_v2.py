@@ -94,3 +94,54 @@ def test_placeholder_2099_deadline_becomes_none():
     hit = dict(hits[0], closeDate="01/01/2099")
     rec = hit_to_record(hit, "technology", "11", BUILD)
     assert rec.deadline_iso is None and rec.deadline is None
+
+
+# --- Salary benchmarking (Form 990 Part VII) ---
+
+FIXTURE_990 = b"""<Return xmlns="http://www.irs.gov/efile"><ReturnData><IRS990>
+<Form990PartVIISectionAGrp><PersonNm>A</PersonNm><TitleTxt>EXECUTIVE DIRECTOR</TitleTxt><AverageHrsPerWkRt>40</AverageHrsPerWkRt><ReportableCompFromOrgAmt>120000</ReportableCompFromOrgAmt><ReportableCompFromRltdOrgAmt>0</ReportableCompFromRltdOrgAmt><OtherCompensationAmt>8000</OtherCompensationAmt></Form990PartVIISectionAGrp>
+<Form990PartVIISectionAGrp><PersonNm>B</PersonNm><TitleTxt>DIRECTOR</TitleTxt><AverageHrsPerWkRt>1</AverageHrsPerWkRt><ReportableCompFromOrgAmt>0</ReportableCompFromOrgAmt></Form990PartVIISectionAGrp>
+</IRS990></ReturnData></Return>"""
+
+
+def test_parse_part_vii_sums_all_comp_columns():
+    from src.v2.sources.salaries import parse_part_vii
+
+    rows = parse_part_vii(FIXTURE_990)
+    assert len(rows) == 2
+    assert rows[0]["comp_total"] == 128000  # org + related + other
+    assert rows[0]["hours"] == 40.0
+
+
+def test_classify_role_buckets():
+    from src.v2.sources.salaries import classify_role
+
+    assert classify_role("PRESIDENT/CEO") == "Executive Director / CEO"
+    assert classify_role("CHIEF FINANCIAL OFFICER") == "Finance (CFO / Controller)"
+    assert classify_role("DIRECTOR OF DEVELOPMENT") == "Development / Fundraising"
+    assert classify_role("VP OF PROGRAMS") == "Programs"
+
+
+def test_build_benchmarks_requires_minimum_sample():
+    from src.v2.sources.salaries import PersonComp, build_benchmarks
+
+    def person(comp, revenue=5_000_000):
+        return PersonComp(org_name="Org", ein="1", city="Phoenix", revenue=revenue,
+                          filing_year=2024, title_raw="CEO", role="Executive Director / CEO",
+                          hours=40.0, comp_total=comp)
+
+    thin = build_benchmarks([person(100_000), person(110_000)])
+    assert thin == []  # 2 people is not a benchmark
+    full = build_benchmarks([person(c) for c in (100_000, 120_000, 140_000, 160_000, 180_000)])
+    all_sizes = [b for b in full if b["revenue_band"] == "All sizes"]
+    assert len(all_sizes) == 1 and all_sizes[0]["median"] == 140_000 and all_sizes[0]["count"] == 5
+
+
+def test_parse_part_vii_tolerates_truncated_xml():
+    from src.v2.sources.salaries import parse_part_vii
+
+    cut = FIXTURE_990.find(b"</Form990PartVIISectionAGrp>") + 60
+    truncated = FIXTURE_990[:cut]  # first group complete, rest cut off
+    rows = parse_part_vii(truncated)
+    # The first (complete) group survives; the cut group does not.
+    assert len(rows) == 1 and rows[0]["comp_total"] == 128000
