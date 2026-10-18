@@ -26,7 +26,7 @@ from datetime import date
 from pathlib import Path
 
 from .models import FunderRecord, GrantRecord
-from .sources import curated, grantsgov, propublica
+from .sources import curated, grantsgov, propublica, salaries
 from .validate import validate_grants
 
 logging.basicConfig(
@@ -36,7 +36,8 @@ logging.basicConfig(
 logger = logging.getLogger("grant_finder_v2.pipeline")
 
 
-def build_report(grants: list[GrantRecord], funders: list[FunderRecord], build_date: date) -> dict:
+def build_report(grants: list[GrantRecord], funders: list[FunderRecord], build_date: date,
+                 salary_data: dict | None = None) -> dict:
     amounts = [g.funding_amount.amount for g in grants if g.funding_amount]
     sectors = Counter(s for g in grants for s in g.nonprofit_sector)
     tech = Counter(t for g in grants for t in g.tech_focus)
@@ -54,10 +55,13 @@ def build_report(grants: list[GrantRecord], funders: list[FunderRecord], build_d
         "nonprofit_sectors": dict(sectors.most_common()),
         "tech_focus": dict(tech.most_common()),
         "funders": [f.model_dump() for f in funders],
+        "salary_benchmarks": (salary_data or {}).get("benchmarks", []),
+        "salary_samples": (salary_data or {}).get("samples", []),
+        "salary_methodology": (salary_data or {}).get("methodology", {}),
     }
 
 
-def run(output_dir: Path, fetch_amounts: bool = True) -> tuple[Path, Path]:
+def run(output_dir: Path, fetch_amounts: bool = True, with_salaries: bool = True) -> tuple[Path, Path]:
     build_date = date.today()
     logger.info("Grant Finder v2 run started (build date %s)", build_date)
 
@@ -67,6 +71,14 @@ def run(output_dir: Path, fetch_amounts: bool = True) -> tuple[Path, Path]:
     logger.info("source curated: %d records", len(programs))
     funders = propublica.collect(today=build_date)
     logger.info("source propublica: %d funders", len(funders))
+
+    salary_data = None
+    if with_salaries:
+        salary_data = salaries.collect(today=build_date)
+        logger.info("source salaries: %d people from %d orgs, %d benchmark rows",
+                    salary_data["methodology"]["people_counted"],
+                    salary_data["methodology"]["organizations_used"],
+                    len(salary_data["benchmarks"]))
 
     kept, notes = validate_grants(federal + programs, build_date)
     for note in notes:
@@ -83,7 +95,7 @@ def run(output_dir: Path, fetch_amounts: bool = True) -> tuple[Path, Path]:
         encoding="utf-8",
     )
     report_path.write_text(
-        json.dumps(build_report(kept, funders, build_date), indent=2, ensure_ascii=False),
+        json.dumps(build_report(kept, funders, build_date, salary_data), indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
     logger.info("wrote %s (%d grants) and %s", grants_path, len(kept), report_path)
@@ -94,12 +106,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Grant Finder v2 pipeline")
     parser.add_argument("--output-dir", type=Path, default=Path("data/output"))
     parser.add_argument(
+        "--no-salaries",
+        action="store_true",
+        help="Skip the Form 990 Part VII salary benchmark build",
+    )
+    parser.add_argument(
         "--no-details",
         action="store_true",
         help="Skip Grants.gov award-amount enrichment (faster, amounts stay empty)",
     )
     args = parser.parse_args(argv)
-    run(args.output_dir, fetch_amounts=not args.no_details)
+    run(args.output_dir, fetch_amounts=not args.no_details, with_salaries=not args.no_salaries)
     return 0
 
 
