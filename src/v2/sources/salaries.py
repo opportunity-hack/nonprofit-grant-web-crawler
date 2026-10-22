@@ -251,6 +251,35 @@ def collect_comparable_eins(session: requests.Session, cap: int = 400) -> list[s
     return eins[:cap]
 
 
+def pick_samples(people: list[PersonComp], total: int = 60, small_slots: int = 30) -> list[PersonComp]:
+    """Highest-paid people nationally, plus the highest-paid person at each
+    of the best-paying small orgs (revenue under $1M). A straight top-N by
+    pay contains no small orgs at all, so the explorer would show none."""
+    ranked = sorted(people, key=lambda p: p.comp_total, reverse=True)
+    chosen: list[PersonComp] = []
+    seen = set()
+
+    def take(p: PersonComp) -> None:
+        key = (p.ein, p.title_raw, p.comp_total)
+        if key not in seen:
+            seen.add(key)
+            chosen.append(p)
+
+    best_small: dict[str, PersonComp] = {}
+    for p in people:
+        if p.revenue is not None and p.revenue < 1_000_000:
+            cur = best_small.get(p.ein)
+            if cur is None or p.comp_total > cur.comp_total:
+                best_small[p.ein] = p
+    for p in sorted(best_small.values(), key=lambda p: p.comp_total, reverse=True)[:small_slots]:
+        take(p)
+    for p in ranked:
+        if len(chosen) >= total:
+            break
+        take(p)
+    return sorted(chosen, key=lambda p: p.comp_total, reverse=True)
+
+
 def collect(max_orgs: int = 40, today: Optional[date] = None) -> dict:
     """Build salary benchmarks. Returns a JSON-ready dict (see pipeline)."""
     today = today or date.today()
@@ -345,7 +374,7 @@ def collect(max_orgs: int = 40, today: Optional[date] = None) -> dict:
                     org.get("name"), kept, orgs_used)
 
     benchmarks = build_benchmarks(people)
-    samples = sorted(people, key=lambda p: p.comp_total, reverse=True)[:60]
+    samples = pick_samples(people)
     return {
         "benchmarks": benchmarks,
         "samples": [
