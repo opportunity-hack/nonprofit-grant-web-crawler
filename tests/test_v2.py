@@ -137,6 +137,55 @@ def test_build_benchmarks_requires_minimum_sample():
     assert len(all_sizes) == 1 and all_sizes[0]["median"] == 140_000 and all_sizes[0]["count"] == 5
 
 
+def test_build_benchmarks_under_350k_is_an_extra_cut():
+    from src.v2.sources.salaries import PersonComp, build_benchmarks
+
+    def person(comp, revenue):
+        return PersonComp(org_name="Org", ein="1", city="Phoenix", revenue=revenue,
+                          filing_year=2024, title_raw="CEO", role="Executive Director / CEO",
+                          hours=40.0, comp_total=comp)
+
+    people = [person(c, 300_000) for c in (50_000, 60_000, 70_000, 80_000, 90_000)]
+    people.append(person(100_000, 500_000))  # under $1M, but not under $350K
+    rows = {(b["revenue_band"]): b for b in build_benchmarks(people)}
+    # The $300K people count in all three bands; the $500K person only
+    # in "Under $1M" and "All sizes".
+    assert rows["Under $350K"]["count"] == 5 and rows["Under $350K"]["median"] == 70_000
+    assert rows["Under $1M"]["count"] == 6
+    assert rows["All sizes"]["count"] == 6
+
+
+def test_build_benchmarks_under_350k_suppressed_below_minimum():
+    from src.v2.sources.salaries import PersonComp, build_benchmarks
+
+    def person(comp, revenue=300_000):
+        return PersonComp(org_name="Org", ein="1", city="Phoenix", revenue=revenue,
+                          filing_year=2024, title_raw="CEO", role="Executive Director / CEO",
+                          hours=40.0, comp_total=comp)
+
+    rows = build_benchmarks([person(c) for c in (50_000, 60_000, 70_000)])
+    assert rows == []  # n=3 is below MIN_BUCKET_N in every band, new one included
+
+
+def test_pick_samples_includes_under_350k_orgs():
+    from src.v2.sources.salaries import PersonComp, pick_samples
+
+    def person(ein, comp, revenue):
+        return PersonComp(org_name=f"Org {ein}", ein=ein, city="Phoenix", revenue=revenue,
+                          filing_year=2024, title_raw="CEO", role="Executive Director / CEO",
+                          hours=40.0, comp_total=comp)
+
+    people = [person(f"tiny-{i}", 50_000 + i * 1_000, 300_000) for i in range(5)]
+    people += [person(f"small-{i}", 100_000 + i * 1_000, 900_000) for i in range(30)]
+    people += [person(f"large-{i}", 500_000 + i * 1_000, 20_000_000) for i in range(60)]
+    samples = pick_samples(people)
+    assert len(samples) == 60
+    sampled_eins = {p.ein for p in samples}
+    # The tiny orgs pay the least, so only the reserved slots get them in.
+    assert all(f"tiny-{i}" in sampled_eins for i in range(5))
+    assert sum(1 for p in samples if p.revenue < 1_000_000) >= 35
+
+
 def test_parse_part_vii_tolerates_truncated_xml():
     from src.v2.sources.salaries import parse_part_vii
 

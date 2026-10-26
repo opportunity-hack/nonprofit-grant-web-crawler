@@ -63,6 +63,14 @@ REVENUE_BANDS = [
     ("$10M+", 10_000_000, float("inf")),
 ]
 
+# Extra sub-band published alongside (not instead of) the bands above:
+# very small organizations are the most-requested comparison and are
+# otherwise hidden inside "Under $1M". A person under this ceiling
+# still counts in "Under $1M" and "All sizes" exactly as before; the
+# "Under $350K" rows are an additional cut of the same people.
+EXTRA_REVENUE_BAND_LABEL = "Under $350K"
+EXTRA_REVENUE_BAND_CEILING = 350_000
+
 
 @dataclass
 class PersonComp:
@@ -210,6 +218,10 @@ def build_benchmarks(people: list[PersonComp]) -> list[dict]:
         for band, _, _ in REVENUE_BANDS:
             _add(role, band, [p.comp_total for p in people
                               if p.role == role and _revenue_band(p.revenue) == band])
+        _add(role, EXTRA_REVENUE_BAND_LABEL,
+             [p.comp_total for p in people
+              if p.role == role and p.revenue is not None
+              and p.revenue < EXTRA_REVENUE_BAND_CEILING])
     return benchmarks
 
 
@@ -251,28 +263,53 @@ def collect_comparable_eins(session: requests.Session, cap: int = 400) -> list[s
     return eins[:cap]
 
 
-def pick_samples(people: list[PersonComp], total: int = 60, small_slots: int = 30) -> list[PersonComp]:
-    """Highest-paid people nationally, plus the highest-paid person at each
-    of the best-paying small orgs (revenue under $1M). A straight top-N by
-    pay contains no small orgs at all, so the explorer would show none."""
+def pick_samples(people: list[PersonComp], total: int = 60, small_slots: int = 30,
+                 tiny_slots: int = 12) -> list[PersonComp]:
+    """Highest-paid people nationally, plus reserved representation for
+    small orgs. A straight top-N by pay contains no small orgs at all,
+    so the explorer would show none. Slots are reserved in this order:
+
+    1. tiny_slots: the highest-paid person at each of the best-paying
+       very small orgs (revenue under $350K);
+    2. small_slots: the highest-paid person at each of the best-paying
+       small orgs (revenue under $1M) - a full small_slots of new picks
+       on top of the tiny picks, so the tiny reservation does not eat
+       into small-org representation;
+    3. the remaining slots fill with the highest-paid people overall.
+    """
     ranked = sorted(people, key=lambda p: p.comp_total, reverse=True)
     chosen: list[PersonComp] = []
     seen = set()
 
-    def take(p: PersonComp) -> None:
+    def take(p: PersonComp) -> bool:
         key = (p.ein, p.title_raw, p.comp_total)
         if key not in seen:
             seen.add(key)
             chosen.append(p)
+            return True
+        return False
 
-    best_small: dict[str, PersonComp] = {}
-    for p in people:
-        if p.revenue is not None and p.revenue < 1_000_000:
-            cur = best_small.get(p.ein)
-            if cur is None or p.comp_total > cur.comp_total:
-                best_small[p.ein] = p
-    for p in sorted(best_small.values(), key=lambda p: p.comp_total, reverse=True)[:small_slots]:
-        take(p)
+    def best_per_org(ceiling: float) -> list[PersonComp]:
+        best: dict[str, PersonComp] = {}
+        for p in people:
+            if p.revenue is not None and p.revenue < ceiling:
+                cur = best.get(p.ein)
+                if cur is None or p.comp_total > cur.comp_total:
+                    best[p.ein] = p
+        return sorted(best.values(), key=lambda p: p.comp_total, reverse=True)
+
+    tiny_taken = 0
+    for p in best_per_org(EXTRA_REVENUE_BAND_CEILING):
+        if tiny_taken >= tiny_slots:
+            break
+        if take(p):
+            tiny_taken += 1
+    small_taken = 0
+    for p in best_per_org(1_000_000):
+        if small_taken >= small_slots:
+            break
+        if take(p):
+            small_taken += 1
     for p in ranked:
         if len(chosen) >= total:
             break
