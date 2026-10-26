@@ -299,18 +299,18 @@
   {
    "role": "Executive Director / CEO",
    "revenue_band": "All sizes",
-   "count": 213,
-   "median": 206258.0,
-   "p25": 110675.0,
+   "count": 215,
+   "median": 203771.0,
+   "p25": 108981.0,
    "p75": 341118.0
   },
   {
    "role": "Executive Director / CEO",
    "revenue_band": "Under $1M",
-   "count": 52,
+   "count": 54,
    "median": 97038.5,
-   "p25": 54167.0,
-   "p75": 145224.0
+   "p25": 52635.0,
+   "p75": 139912.0
   },
   {
    "role": "Executive Director / CEO",
@@ -331,10 +331,10 @@
   {
    "role": "Executive Director / CEO",
    "revenue_band": "Under $350K",
-   "count": 28,
+   "count": 30,
    "median": 79923.0,
-   "p25": 49134.0,
-   "p75": 119800.0
+   "p25": 46634.0,
+   "p75": 116588.0
   },
   {
    "role": "Finance (CFO / Controller)",
@@ -387,18 +387,18 @@
   {
    "role": "Other Directors & Officers",
    "revenue_band": "All sizes",
-   "count": 740,
-   "median": 193765.5,
-   "p25": 147000.0,
-   "p75": 265239.0
+   "count": 743,
+   "median": 193594.0,
+   "p25": 146195.0,
+   "p75": 265082.0
   },
   {
    "role": "Other Directors & Officers",
    "revenue_band": "Under $1M",
-   "count": 42,
-   "median": 90022.5,
-   "p25": 51000.0,
-   "p75": 134919.0
+   "count": 45,
+   "median": 79671.0,
+   "p25": 50000.0,
+   "p75": 126794.0
   },
   {
    "role": "Other Directors & Officers",
@@ -419,26 +419,26 @@
   {
    "role": "Other Directors & Officers",
    "revenue_band": "Under $350K",
-   "count": 18,
-   "median": 53711.0,
+   "count": 21,
+   "median": 51000.0,
    "p25": 42533.0,
    "p75": 72659.0
   },
   {
    "role": "Programs",
    "revenue_band": "All sizes",
-   "count": 49,
-   "median": 180012.0,
-   "p25": 137765.0,
+   "count": 51,
+   "median": 179248.0,
+   "p25": 131534.0,
    "p75": 256049.0
   },
   {
    "role": "Programs",
    "revenue_band": "Under $1M",
-   "count": 4,
-   "median": 95409.0,
-   "p25": 86856.0,
-   "p75": 117789.0
+   "count": 6,
+   "median": 94428.0,
+   "p25": 34431.0,
+   "p75": 103962.0
   },
   {
    "role": "Programs",
@@ -455,6 +455,14 @@
    "median": 188678.5,
    "p25": 151144.0,
    "p75": 262528.0
+  },
+  {
+   "role": "Programs",
+   "revenue_band": "Under $350K",
+   "count": 4,
+   "median": 68215.5,
+   "p25": 34431.0,
+   "p75": 103962.0
   }
  ],
  "salary_samples": [
@@ -1071,6 +1079,18 @@
    "comp_total": 109641.0
   },
   {
+   "org_name": "Apex Transitional Housing",
+   "ein": "851008448",
+   "city": "Phoenix",
+   "state": "AZ",
+   "revenue": 331837,
+   "filing_year": 2024,
+   "title": "EXECUTIVE DIRECTOR",
+   "role": "Executive Director / CEO",
+   "hours": 50,
+   "comp_total": 108000.0
+  },
+  {
    "org_name": "Gillette Reproductive Health",
    "ein": "830319938",
    "city": "Gillette",
@@ -1165,26 +1185,14 @@
    "role": "Executive Director / CEO",
    "hours": 40,
    "comp_total": 97394.0
-  },
-  {
-   "org_name": "Banda Health",
-   "ein": "813695611",
-   "city": "Austin",
-   "state": "TX",
-   "revenue": 358305,
-   "filing_year": 2025,
-   "title": "PRESIDENT",
-   "role": "Executive Director / CEO",
-   "hours": 40,
-   "comp_total": 90415.0
   }
  ],
  "salary_methodology": {
   "source": "IRS Form 990 Part VII via ProPublica Nonprofit Explorer",
   "universe": "Nonprofits filing Form 990 with paid officers in AK/AL/AR/AZ/CA/CO/CT/DC/DE/FL/GA/HI/IA/ID/IL/IN/KS/KY/LA/MA/MD/ME/MI/MN/MO/MS/MT/NC/ND/NE/NH/NJ/NM/NV/NY/OK/OR/PA/RI/SC/SD/TN/TX/UT/VA/VT/WA/WI/WV/WY; latest filing per organization",
   "filters": "Only people with >= 20 avg hours/week and >= $20,000 total compensation (reportable from org + related orgs + other comp)",
-  "organizations_used": 258,
-  "people_counted": 1195,
+  "organizations_used": 262,
+  "people_counted": 1202,
   "generated_at": "2026-10-26"
  }
 }
